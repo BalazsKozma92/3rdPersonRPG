@@ -1,0 +1,15 @@
+*.sln
+*.userprefs
+*.csproj
+*.pidb
+*.unityproj
+.DS_Store
+/obj
+/Temp
+/Builds
+Library/
+build/
+*/Standard Assets
+Assets/Standard Assets/
+*.prefab
+*.meta
