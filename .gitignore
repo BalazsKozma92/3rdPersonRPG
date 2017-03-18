@@ -14,3 +14,10 @@ Assets/Standard Assets/
 *.prefab
 *.meta
 Assets/ProCore/
+*.mat
+*.tga
+*.blend
+*.psd
+*.fbx
+*.jpg
+*.png

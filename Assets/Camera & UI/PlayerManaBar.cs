@@ -3,23 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(RawImage))]
+[RequireComponent(typeof(Image))]
 public class PlayerManaBar : MonoBehaviour
 {
-    Player player;
+	Player player;
 	float manaPercentage;
-	RectTransform rectTransform;
+	Image manaImage;
 
-    void Start()
-    {
-		rectTransform = GetComponent<RectTransform> ();
-        player = FindObjectOfType<Player>();
-    }
-		
-    void Update()
-    {
-		manaPercentage = player.manaAsPercentage;
-		rectTransform.localScale = new Vector2(manaPercentage, manaPercentage);
-		rectTransform.Rotate (Vector3.back, Time.deltaTime * 40f);
-    }
+	void Start()
+	{
+		manaImage = GetComponent<Image> ();
+		player = FindObjectOfType<Player>();
+	}
+
+	void Update()
+	{
+		manaImage.fillAmount = player.manaAsPercentage;
+		//rectTransform.localScale = new Vector2(healthPercentage, healthPercentage);
+		//rectTransform.Rotate (Vector3.back, Time.deltaTime * 25f);
+	}
 }
