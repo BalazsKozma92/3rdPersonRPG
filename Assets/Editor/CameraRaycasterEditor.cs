@@ -1,6 +1,5 @@
 ﻿using UnityEditor;
 
-
 // TODO consider changing to a property drawer
 [CustomEditor(typeof(CameraRaycaster))]
 public class CameraRaycasterEditor : Editor
@@ -27,12 +26,14 @@ public class CameraRaycasterEditor : Editor
 
     void BindArraySize()
     {
-        int currentArraySize = serializedObject.FindProperty("layerPriorities.Array.size").intValue;
-        int requiredArraySize = EditorGUILayout.IntField("Size", currentArraySize);
-        if (requiredArraySize != currentArraySize)
-        {
-            serializedObject.FindProperty("layerPriorities.Array.size").intValue = requiredArraySize;
-        }
+		var currentArraySize = serializedObject.FindProperty("layerPriorities.Array.size");
+		currentArraySize.intValue = EditorGUILayout.IntField("Size", currentArraySize.intValue);
+//        int currentArraySize = serializedObject.FindProperty("layerPriorities.Array.size").intValue;
+//        int requiredArraySize = EditorGUILayout.IntField("Size", currentArraySize);
+//        if (requiredArraySize != currentArraySize)
+//        {
+//            serializedObject.FindProperty("layerPriorities.Array.size").intValue = requiredArraySize;
+//        }
     }
 
     void BindArrayElements()
