@@ -10,6 +10,10 @@ public class CursorAffordance : MonoBehaviour {
 	[SerializeField] Texture2D targetCursor = null;
 	[SerializeField] Texture2D buttonCursor = null;
 
+	[SerializeField] const int uiLayer = 5;
+	[SerializeField] const int walkableLayer = 8;
+	[SerializeField] const int enemyLayer = 9;
+
     [SerializeField] Vector2 cursorHotspot = new Vector2(0, 0);
 
     CameraRaycaster cameraRaycaster;
@@ -23,13 +27,13 @@ public class CursorAffordance : MonoBehaviour {
     void OnLayerChanged(int newLayer) {
         switch (newLayer)
         {
-		case 5: // TODO make cameraRaycaster member variables
+		case uiLayer: // TODO make cameraRaycaster member variables
 			Cursor.SetCursor (buttonCursor, cursorHotspot, CursorMode.Auto);
 			break;
-		case 8:
+		case walkableLayer:
             Cursor.SetCursor(walkCursor, cursorHotspot, CursorMode.Auto);
             break;
-        case 9:
+		case enemyLayer:
             Cursor.SetCursor(targetCursor, cursorHotspot, CursorMode.Auto);
             break;
         default:

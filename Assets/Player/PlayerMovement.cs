@@ -21,21 +21,6 @@ public class PlayerMovement : MonoBehaviour
         currentDestination = transform.position;
     }
 
-    // Fixed update is called in sync with physics
-    private void FixedUpdate()
-    {
-		if (Input.GetKeyDown (KeyCode.G)) { // G for gamepad. TODO add to menu
-			isInDirectMode = !isInDirectMode; // toggle mode
-			currentDestination = transform.position; // clear the click target
-		}
-
-		if (isInDirectMode) {
-			ProcessDirectMovement();
-		} else {
-			ProcessIndirectMovement();
-		}
-    }
-
 	void ProcessDirectMovement(){
 		float h = Input.GetAxis("Horizontal");
 		float v = Input.GetAxis("Vertical");
@@ -47,24 +32,23 @@ public class PlayerMovement : MonoBehaviour
 		thirdPersonCharacter.Move (movement, false, false);
 	}
 
-	void ProcessIndirectMovement(){
-		if (Input.GetMouseButton(0))
-		{
-			clickPoint = cameraRaycaster.hit.point;
-			switch (cameraRaycaster.currentLayerHit) {
-			case Layer.Walkable:
-				currentDestination = ShortDestination(clickPoint, walkMoveStopRadius);  // So not set in default case
-				break;
-			case Layer.Enemy:
-				currentDestination = ShortDestination(clickPoint, attackMoveStopRadius);  // So not set in default case
-				break;
-			default:
-				print ("Unexpected layer found");
-				return;
-			}
-		}
-		WalkToDestination ();
-	}
+//	void ProcessIndirectMovement(){
+//		if (Input.GetMouseButton(0))
+//		{
+//			switch (cameraRaycaster.currentLayerHit) {
+//			case Layer.Walkable:
+//				currentDestination = ShortDestination(clickPoint, walkMoveStopRadius);  // So not set in default case
+//				break;
+//			case Layer.Enemy:
+//				currentDestination = ShortDestination(clickPoint, attackMoveStopRadius);  // So not set in default case
+//				break;
+//			default:
+//				print ("Unexpected layer found");
+//				return;
+//			}
+//		}
+//		WalkToDestination ();
+//	}
 
 	void WalkToDestination(){
 		var playerToClickPoint = currentDestination - transform.position;

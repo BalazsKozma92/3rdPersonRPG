@@ -7,8 +7,8 @@ using UnityEngine.UI;
 public class PlayerManaBar : MonoBehaviour
 {
 	Player player;
-	float manaPercentage;
 	Image manaImage;
+	float manaPercentage;
 
 	void Start()
 	{
@@ -19,7 +19,5 @@ public class PlayerManaBar : MonoBehaviour
 	void Update()
 	{
 		manaImage.fillAmount = player.manaAsPercentage;
-		//rectTransform.localScale = new Vector2(healthPercentage, healthPercentage);
-		//rectTransform.Rotate (Vector3.back, Time.deltaTime * 25f);
 	}
 }
