@@ -5,32 +5,38 @@ using UnityEngine;
 [RequireComponent(typeof(CameraRaycaster))]
 public class CursorAffordance : MonoBehaviour {
 
-	[SerializeField] Texture2D walkCursor = null;
-	[SerializeField] Texture2D attackCursor = null;
-	[SerializeField] Texture2D nullCursor = null;
-	[SerializeField] Vector2 cursorHotspot = new Vector2(0, 0);
+    [SerializeField] Texture2D walkCursor = null;
+    [SerializeField] Texture2D unknownCursor = null;
+	[SerializeField] Texture2D targetCursor = null;
+	[SerializeField] Texture2D buttonCursor = null;
 
-	CameraRaycaster cameraRaycaster;
+    [SerializeField] Vector2 cursorHotspot = new Vector2(0, 0);
 
+    CameraRaycaster cameraRaycaster;
+
+	// Use this for initialization
 	void Start () {
-		cameraRaycaster = GetComponent<CameraRaycaster> ();
-		cameraRaycaster.onLayerChange += OnLayerChanged;
+        cameraRaycaster = GetComponent<CameraRaycaster>();
+        cameraRaycaster.notifyLayerChangeObservers += OnLayerChanged; // registering
 	}
-	
-	void OnLayerChanged (Layer newLayer) {
-		switch (newLayer) {
-		case Layer.Walkable:
-			Cursor.SetCursor (walkCursor, cursorHotspot, CursorMode.Auto);
+
+    void OnLayerChanged(int newLayer) {
+        switch (newLayer)
+        {
+		case 5: // TODO make cameraRaycaster member variables
+			Cursor.SetCursor (buttonCursor, cursorHotspot, CursorMode.Auto);
 			break;
-		case Layer.Enemy:
-			Cursor.SetCursor (attackCursor, cursorHotspot, CursorMode.Auto);
-			break;
-		case Layer.RaycastEndStop:
-			Cursor.SetCursor (nullCursor, cursorHotspot, CursorMode.Auto);
-			break;
-		default:
-			Debug.LogError ("Don't know what cursor to show.");
-			return;
-		}
-	}
+		case 8:
+            Cursor.SetCursor(walkCursor, cursorHotspot, CursorMode.Auto);
+            break;
+        case 9:
+            Cursor.SetCursor(targetCursor, cursorHotspot, CursorMode.Auto);
+            break;
+        default:
+			Cursor.SetCursor(unknownCursor, cursorHotspot, CursorMode.Auto);
+            return;
+        }
+    }
+
+    // TODO consider de-registering OnLayerChanged on leaving all game scenes
 }
