@@ -21,3 +21,5 @@ Assets/ProCore/
 *.fbx
 *.jpg
 *.png
+*.shader
+*.tif
