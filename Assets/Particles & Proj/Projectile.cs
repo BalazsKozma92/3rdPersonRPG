@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour {
 
-	[SerializeField] float damageCaused = 12.2f;
+	public float projectileSpeed;
+	public float damageCaused;
 
 	void OnTriggerEnter(Collider collider){
 		Component damagable = collider.gameObject.GetComponent (typeof(IDamagable));
-		if (damagable && collider.gameObject.tag == "Enemy") {
+		if (damagable) {
 			(damagable as IDamagable).TakeDamage (damageCaused);
 		}
 	}

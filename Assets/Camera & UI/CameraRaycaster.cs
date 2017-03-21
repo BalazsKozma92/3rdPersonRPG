@@ -71,13 +71,28 @@ public class CameraRaycaster : MonoBehaviour
 		// Step through layers in order of priority looking for a gameobject with that layer
 		foreach (int layer in layerPriorities)
 		{
-			foreach (RaycastHit hit in raycastHits)
-			{
-				if (hit.collider.gameObject.layer == layer)
-				{
-					return hit; // stop looking
+			int topPriorityHitIndex = -1;
+			for (int i = 0; i < raycastHits.Length; i++) {
+				if (raycastHits [i].collider.gameObject.layer == layer) {
+					if (topPriorityHitIndex >= 0) {
+						if(raycastHits[i].distance < raycastHits[topPriorityHitIndex].distance) {
+							topPriorityHitIndex = i;
+						}
+					} else {
+						topPriorityHitIndex = i;
+					}
 				}
 			}
+			if(topPriorityHitIndex >= 0) {
+				return raycastHits[topPriorityHitIndex];// Stop looking
+			}
+//			foreach (RaycastHit hit in raycastHits)
+//			{
+//				if (hit.collider.gameObject.layer == layer)
+//				{
+//					return hit; // stop looking
+//				}
+//			}
 		}
 		return null; // because cannot use GameObject? nullable
 	}
