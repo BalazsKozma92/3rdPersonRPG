@@ -5,11 +5,11 @@ using UnityEngine;
 public class Projectile : MonoBehaviour {
 
 	public float projectileSpeed;
-	public float damageCaused;
+	[HideInInspector] public float damageCaused;
 
 	void OnTriggerEnter(Collider collider){
 		Component damagable = collider.gameObject.GetComponent (typeof(IDamagable));
-		if (damagable) {
+		if (damagable && collider.gameObject.tag == "Player") {
 			(damagable as IDamagable).TakeDamage (damageCaused);
 		}
 	}

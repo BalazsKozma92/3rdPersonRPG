@@ -24,3 +24,5 @@ Assets/ProCore/
 *.shader
 *.tif
 Assets/Particles & Proj/
+*.dae
+*.cubemap
