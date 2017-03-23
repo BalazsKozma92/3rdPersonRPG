@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour, IDamagable {
 
+	public int enemyLevel = 5;
 	[SerializeField] float maxHealthPoints = 100f;
 	[SerializeField] float moveRadius = 3f;
 	float initialMoveRadius;
@@ -38,6 +39,16 @@ public class Enemy : MonoBehaviour, IDamagable {
 	}
 
 	void Start(){
+		if (enemyLevel > 1) {
+			for (int i = 0; i < enemyLevel-1; i++) {
+				maxHealthPoints *= 1.23f;
+			}
+		}
+		if (enemyLevel > 1) {
+			for (int i = 0; i < enemyLevel-1; i++) {
+				damagePerShot *= 1.14f;
+			}
+		}
 		currentHealthPoints = maxHealthPoints;
 		thisBasePoint = Instantiate (basePoint, transform.position, transform.rotation, transform.parent);
 
