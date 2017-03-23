@@ -16,9 +16,11 @@ public class PlayerMovement : MonoBehaviour
     CameraRaycaster cameraRaycaster = null;
 	AICharacterControl aiCharControl = null;
 	GameObject walkTarget = null;
+	NavMeshAgent navMeshAgent;
 	
     void Start()
     {
+		navMeshAgent = GetComponent<NavMeshAgent> ();
 		cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
 		aiCharControl = GetComponent<AICharacterControl> ();
@@ -31,11 +33,13 @@ public class PlayerMovement : MonoBehaviour
 		switch (layerHit) {
 		case enemyLayerNumber:
 			// navigate to enemy
+			navMeshAgent.stoppingDistance = 1.5f;
 			GameObject enemy = raycastHit.collider.gameObject;
 			aiCharControl.SetTarget (enemy.transform);
 			break;
 		case walkableLayerNumber:
 			// navigate on ground
+			navMeshAgent.stoppingDistance = .2f;
 			walkTarget.transform.position = raycastHit.point;
 			aiCharControl.SetTarget (walkTarget.transform);
 			break;

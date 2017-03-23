@@ -12,16 +12,16 @@ public class Enemy : MonoBehaviour, IDamagable {
 	[SerializeField] float attackRadius = 6f;
 	[SerializeField] float damagePerShot = 8.3f;
 	[SerializeField] float secondsBetweenShots = 0.5f;
-	[SerializeField] Projectile projectileToUse;
-	[SerializeField] GameObject projectileSocket;
+	[SerializeField] Projectile projectileToUse = null;
+	[SerializeField] GameObject projectileSocket = null;
 	[SerializeField] Vector3 aimOffset = new Vector3(0, 1f, 0);
 
 	bool isAttacking = false;
 	bool isChasing = false;
-	float currentHealthPoints = 100f;
+	float currentHealthPoints;
 	AICharacterControl aiCharControl= null;
 	GameObject player = null;
-	[SerializeField] GameObject basePoint;
+	[SerializeField] GameObject basePoint = null;
 	GameObject thisBasePoint;
 
 
@@ -51,6 +51,11 @@ public class Enemy : MonoBehaviour, IDamagable {
 	void Update(){
 		float distanceToPlayer = Vector3.Distance (player.transform.position, transform.position);
 		float playerDistanceToBasePoint = Vector3.Distance (thisBasePoint.transform.position, player.transform.position);
+
+		if (distanceToPlayer <= attackRadius) {
+			Vector3 faceThePlayer = (player.transform.position - transform.position);
+			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (faceThePlayer), .2f);
+		}
 
 		if (distanceToPlayer <= attackRadius && !isAttacking) {
 			isAttacking = true;
