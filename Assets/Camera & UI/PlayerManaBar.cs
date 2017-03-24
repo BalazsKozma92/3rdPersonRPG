@@ -9,6 +9,9 @@ public class PlayerManaBar : MonoBehaviour
 	Player player;
 	Image manaImage;
 	float manaPercentage;
+	[SerializeField] Text manaText = null;
+	string currentMana;
+	string maxMana;
 
 	void Start()
 	{
@@ -18,6 +21,10 @@ public class PlayerManaBar : MonoBehaviour
 
 	void Update()
 	{
+		currentMana = player.GetCurrentMana ().ToString("F0");
+		maxMana = player.GetMaxMana ().ToString ("F0");
+		manaText.text = currentMana + " " + maxMana;
+
 		manaImage.fillAmount = player.manaAsPercentage;
 	}
 }

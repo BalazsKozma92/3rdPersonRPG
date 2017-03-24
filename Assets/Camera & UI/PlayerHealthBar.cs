@@ -9,6 +9,9 @@ public class PlayerHealthBar : MonoBehaviour
 	Player player;
 	Image healthImage;
 	float healthPercentage;
+	[SerializeField] Text healthText = null;
+	string currentHealth;
+	string maxHealth;
 
     void Start()
     {
@@ -18,6 +21,10 @@ public class PlayerHealthBar : MonoBehaviour
 
     void Update()
     {
+		currentHealth = player.GetCurrentHealth ().ToString("F0");
+		maxHealth = player.GetMaxHealth ().ToString ("F0");
+		healthText.text = currentHealth + " " + maxHealth;
+	
 		healthImage.fillAmount = player.healthAsPercentage;
     }
 }

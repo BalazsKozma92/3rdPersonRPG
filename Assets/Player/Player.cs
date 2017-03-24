@@ -19,24 +19,36 @@ public class Player : MonoBehaviour, IDamagable {
 	float currentManaPoints = 100f;
 	float lastHitTime = 0f;
 
+	public float GetCurrentHealth() { return currentHealthPoints; }
+	public float GetMaxHealth() { return maxHealthPoints; }
+	public float GetCurrentMana() { return currentManaPoints; }
+	public float GetMaxMana() { return maxManaPoints; }
+
+	public delegate void LeveledUp(int newLevel);
+	public event LeveledUp notifyOnLevelingUpObservers;
+
 	void Start(){
-		OnLevelUp ();
+		//OnLevelUp ();
 		currentHealthPoints = maxHealthPoints;
+		currentManaPoints = maxManaPoints;
 		cameraRaycaster = FindObjectOfType<CameraRaycaster> ();
 		cameraRaycaster.notifyMouseClickObservers += OnMouseClick;
 	}
 
 	void OnLevelUp(){
+		playerLevel += 1;
 		if (playerLevel > 1) {
-			for (int i = 0; i < playerLevel-1; i++) {
-				maxHealthPoints *= 1.2f;
-			}
+//			for (int i = 0; i < playerLevel-1; i++) {
+				float tempHealth = (maxHealthPoints *= 1.22f);
+				maxHealthPoints = tempHealth - ((tempHealth / 700f) * 25f);
+//			}
 		}
 		if (playerLevel > 1) {
-			for (int i = 0; i < playerLevel-1; i++) {
+//			for (int i = 0; i < playerLevel-1; i++) {
 				damagePerClick *= 1.15f;
-			}
+//			}
 		}
+		notifyOnLevelingUpObservers (playerLevel);
 	}
 
 	void OnMouseClick(RaycastHit raycastHit, int layerHit){
@@ -58,6 +70,9 @@ public class Player : MonoBehaviour, IDamagable {
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.F)) {
 			currentHealthPoints += 20f;
+		}
+		if (Input.GetKeyDown (KeyCode.G)) {
+			OnLevelUp ();
 		}
 	}
 

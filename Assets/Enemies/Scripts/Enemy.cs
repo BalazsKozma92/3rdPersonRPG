@@ -17,11 +17,14 @@ public class Enemy : MonoBehaviour, IDamagable {
 	[SerializeField] GameObject projectileSocket = null;
 	[SerializeField] Vector3 aimOffset = new Vector3(0, 1f, 0);
 
+	bool higherThan2 = false;
+	bool higherThan5 = false;
 	bool isAttacking = false;
 	bool isChasing = false;
 	float currentHealthPoints;
 	AICharacterControl aiCharControl= null;
 	GameObject player = null;
+	Player playerComp = null;
 	[SerializeField] GameObject basePoint = null;
 	GameObject thisBasePoint;
 
@@ -39,14 +42,18 @@ public class Enemy : MonoBehaviour, IDamagable {
 	}
 
 	void Start(){
+		playerComp = FindObjectOfType<Player> ();
+		playerComp.notifyOnLevelingUpObservers += PlayerLeveledUp;
+
 		if (enemyLevel > 1) {
 			for (int i = 0; i < enemyLevel-1; i++) {
-				maxHealthPoints *= 1.23f;
+				float tempHealth = (maxHealthPoints *= 1.22f);
+				maxHealthPoints = tempHealth - ((tempHealth / 700f) * 25f);
 			}
 		}
 		if (enemyLevel > 1) {
 			for (int i = 0; i < enemyLevel-1; i++) {
-				damagePerShot *= 1.14f;
+				damagePerShot *= 1.21f;
 			}
 		}
 		currentHealthPoints = maxHealthPoints;
@@ -57,6 +64,16 @@ public class Enemy : MonoBehaviour, IDamagable {
 		player = GameObject.FindGameObjectWithTag ("Player");
 		aiCharControl = GetComponent<AICharacterControl> ();
 
+	}
+
+	void PlayerLeveledUp(int newPlayerLevel){
+		if (newPlayerLevel > enemyLevel + 2 && newPlayerLevel < enemyLevel + 5 && !higherThan2) {
+			higherThan2 = true;
+			damagePerShot *= 0.75f;
+		} else if (newPlayerLevel > enemyLevel + 4 && !higherThan5) {
+			higherThan5 = true;
+			damagePerShot *= 0.6f;
+		}
 	}
 
 	void Update(){
