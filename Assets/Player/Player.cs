@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamagable {
 
-	GameObject currentTarget;
+	//GameObject currentTarget;
 	CameraRaycaster cameraRaycaster;
 
 	public int playerLevel = 1;
@@ -28,7 +28,6 @@ public class Player : MonoBehaviour, IDamagable {
 	public event LeveledUp notifyOnLevelingUpObservers;
 
 	void Start(){
-		//OnLevelUp ();
 		currentHealthPoints = maxHealthPoints;
 		currentManaPoints = maxManaPoints;
 		cameraRaycaster = FindObjectOfType<CameraRaycaster> ();
@@ -38,16 +37,13 @@ public class Player : MonoBehaviour, IDamagable {
 	void OnLevelUp(){
 		playerLevel += 1;
 		if (playerLevel > 1) {
-//			for (int i = 0; i < playerLevel-1; i++) {
 				float tempHealth = (maxHealthPoints *= 1.22f);
 				maxHealthPoints = tempHealth - ((tempHealth / 700f) * 25f);
-//			}
 		}
 		if (playerLevel > 1) {
-//			for (int i = 0; i < playerLevel-1; i++) {
 				damagePerClick *= 1.15f;
-//			}
 		}
+
 		notifyOnLevelingUpObservers (playerLevel);
 	}
 
@@ -60,7 +56,7 @@ public class Player : MonoBehaviour, IDamagable {
 			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (faceTheEnemy), 0.2f);
 
 			if (Time.time - lastHitTime > timeBetweenHits && enemyToPlayerDistance < maxAttackRange) {
-				currentTarget = enemy;
+				//currentTarget = enemy;
 				lastHitTime = Time.time;
 				enemy.GetComponent<IDamagable> ().TakeDamage (damagePerClick);
 			}

@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour, IDamagable {
 	bool higherThan5 = false;
 	bool isAttacking = false;
 	bool isChasing = false;
-	float currentHealthPoints;
+	[SerializeField] float currentHealthPoints;
 	AICharacterControl aiCharControl= null;
 	GameObject player = null;
 	Player playerComp = null;
@@ -36,9 +36,14 @@ public class Enemy : MonoBehaviour, IDamagable {
 	void IDamagable.TakeDamage(float damage){
 		currentHealthPoints = Mathf.Clamp (currentHealthPoints - damage, 0f, maxHealthPoints);
 		if (currentHealthPoints <= 0) {
-			Destroy (gameObject);
-			Destroy (thisBasePoint.gameObject);
+			Invoke ("DestroySelf", 5f);
 		}
+	}
+
+	void DestroySelf(){
+		GetComponentInChildren<EnemyUI> ().UnsubscribeFromDelegate ();
+		Destroy (gameObject);
+		Destroy (thisBasePoint.gameObject);
 	}
 
 	void Start(){
@@ -79,33 +84,40 @@ public class Enemy : MonoBehaviour, IDamagable {
 	void Update(){
 		float distanceToPlayer = Vector3.Distance (player.transform.position, transform.position);
 		float playerDistanceToBasePoint = Vector3.Distance (thisBasePoint.transform.position, player.transform.position);
-
-		if (distanceToPlayer <= attackRadius) {
-			Vector3 faceThePlayer = (player.transform.position - transform.position);
-			transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (faceThePlayer), .2f);
-		}
-
-		if (distanceToPlayer <= attackRadius && !isAttacking) {
-			isAttacking = true;
-			InvokeRepeating ("SpawnProjectile", 0.001f, secondsBetweenShots);
-		}
-		if (distanceToPlayer > attackRadius){
-			isAttacking = false;
-			CancelInvoke ("SpawnProjectile");
-		}
-
-		if (distanceToPlayer <= moveRadius && playerDistanceToBasePoint <= initialMoveRadius * 3.5f) {
-			if (!isChasing) {
-				isChasing = true;
-				moveRadius *= 2f;
+		if (currentHealthPoints > 0f) {
+			if (distanceToPlayer <= attackRadius) {
+				Vector3 faceThePlayer = (player.transform.position - transform.position);
+				transform.rotation = Quaternion.Slerp (transform.rotation, Quaternion.LookRotation (faceThePlayer), .2f);
 			}
-			aiCharControl.SetTarget (player.transform);
+			
+			if (distanceToPlayer <= attackRadius && !isAttacking) {
+				isAttacking = true;
+				InvokeRepeating ("SpawnProjectile", 0.001f, secondsBetweenShots);
+			}
+			if (distanceToPlayer > attackRadius) {
+				isAttacking = false;
+				CancelInvoke ("SpawnProjectile");
+			}
+			
+			if (distanceToPlayer <= moveRadius && playerDistanceToBasePoint <= initialMoveRadius * 3.5f) {
+				if (!isChasing) {
+					isChasing = true;
+					moveRadius *= 2f;
+				}
+				aiCharControl.SetTarget (player.transform);
+			} else {
+				if (isChasing) {
+					isChasing = false;
+					moveRadius = initialMoveRadius;
+				}
+				aiCharControl.SetTarget (thisBasePoint.transform);
+			}
 		} else {
-			if (isChasing) {
-				isChasing = false;
-				moveRadius = initialMoveRadius;
-			}
-			aiCharControl.SetTarget (thisBasePoint.transform);
+			moveRadius = 0;
+			attackRadius = 0;
+			CancelInvoke ("SpawnProjectile");
+			aiCharControl.SetTarget (null);
+			GetComponent<Animator> ().enabled = false;
 		}
 	}
 

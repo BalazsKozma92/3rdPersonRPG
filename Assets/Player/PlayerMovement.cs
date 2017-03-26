@@ -11,11 +11,11 @@ public class PlayerMovement : MonoBehaviour
 
 	[SerializeField] const int walkableLayerNumber = 8;
 	[SerializeField] const int enemyLayerNumber = 9;
+	[SerializeField] GameObject walkTarget = null;
 
 	ThirdPersonCharacter thirdPersonCharacter = null;   // A reference to the ThirdPersonCharacter on the object
     CameraRaycaster cameraRaycaster = null;
 	AICharacterControl aiCharControl = null;
-	GameObject walkTarget = null;
 	NavMeshAgent navMeshAgent;
 	
     void Start()
@@ -24,7 +24,6 @@ public class PlayerMovement : MonoBehaviour
 		cameraRaycaster = Camera.main.GetComponent<CameraRaycaster>();
         thirdPersonCharacter = GetComponent<ThirdPersonCharacter>();
 		aiCharControl = GetComponent<AICharacterControl> ();
-		walkTarget = new GameObject ("WalkTarget");
 
 		cameraRaycaster.notifyMouseClickObservers += ProcessMouseClick;
 	}

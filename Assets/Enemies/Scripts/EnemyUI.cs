@@ -1,52 +1,55 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// Add a UI Socket transform to your enemy
-// Attack this script to the socket
-// Link to a canvas prefab that contains NPC UI
 public class EnemyUI : MonoBehaviour {
 
-    // Works around Unity 5.5's lack of nested prefabs
     [Tooltip("The UI canvas prefab")]
     [SerializeField] GameObject enemyCanvasPrefab = null;
 	Vector3 enemyParent;
-
+	int enemyLevel;
 	Player player;
     Camera cameraToLookAt;
 	Vector3 sizeDifference;
-	GameObject enemyUICanvas;
 	GameObject enemy;
 	Text LevelText;
+	Color orange;
 
-    // Use this for initialization 
     void Start()
-    {
+	{
 		player = FindObjectOfType<Player> ();
+		player.notifyOnLevelingUpObservers += UpdateColors;
 		enemyParent = GetComponentInParent<Enemy> ().gameObject.transform.localScale;
 		cameraToLookAt = Camera.main;
-		enemyUICanvas = Instantiate(enemyCanvasPrefab, transform.position, transform.rotation, transform);
+		Instantiate(enemyCanvasPrefab, transform.position, transform.rotation, transform);
 		transform.localScale = new Vector3 (1f / enemyParent.x, 1f / enemyParent.y, 1f / enemyParent.z);
 		LevelText = GetComponentInChildren<Text> ();
-
-		LevelText.text = GetComponentInParent<Enemy> ().enemyLevel.ToString ();
-		int enemyLevel = GetComponentInParent<Enemy> ().enemyLevel;
-
-		Color orange = new Color (191f/255f, 112f/255f, 11f/255f);
-
-		if (enemyLevel > player.playerLevel + 2 && enemyLevel < player.playerLevel + 5) {
-			LevelText.color = orange;
-		} else if (enemyLevel > player.playerLevel + 4) {
-			LevelText.color = Color.red;
-		} else if (enemyLevel < player.playerLevel - 2 && enemyLevel > player.playerLevel - 5) {
-			LevelText.color = Color.green;
-		} else if (enemyLevel < player.playerLevel - 4) {
-			LevelText.color = Color.gray;
-		} else {
-			LevelText.color = Color.yellow;
-		}
+		orange = new Color (191f/255f, 112f/255f, 11f/255f);
+		enemyLevel = GetComponentInParent<Enemy> ().enemyLevel;
+		UpdateColors (1);
     }
 
-    // Update is called once per frame 
+	void UpdateColors(int playerLevel){
+		if (gameObject != null) {
+			LevelText.text = GetComponentInParent<Enemy> ().enemyLevel.ToString ();
+			
+			if (enemyLevel > playerLevel + 2 && enemyLevel < playerLevel + 5) {
+				LevelText.color = orange;
+			} else if (enemyLevel > playerLevel + 4) {
+				LevelText.color = Color.red;
+			} else if (enemyLevel < playerLevel - 2 && enemyLevel > playerLevel - 5) {
+				LevelText.color = Color.green;
+			} else if (enemyLevel < playerLevel - 4) {
+				LevelText.color = Color.gray;
+			} else {
+				LevelText.color = Color.yellow;
+			}
+		}
+	}
+
+	public void UnsubscribeFromDelegate(){
+		player.notifyOnLevelingUpObservers -= UpdateColors;
+	}
+
     void LateUpdate()
     {
 		transform.LookAt(cameraToLookAt.transform);
